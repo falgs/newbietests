@@ -1,6 +1,7 @@
 package br.com.falgs.newbietests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -13,10 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.falgs.newbietests.model.Movie;
 import br.com.falgs.newbietests.repository.MovieRepository;
+import br.com.falgs.newbietests.service.AuditoriaService;
 import br.com.falgs.newbietests.service.MovieService;
 
 @RunWith(SpringRunner.class)
@@ -31,7 +34,10 @@ public class MovieServiceTest {
 	@MockBean
 	private MovieRepository movieRepository;
 
-	@Test
+	@SpyBean
+	private AuditoriaService auditoriaService;
+
+	// @Test
 	public void testStub() throws Exception {
 
 		Movie fakeMovie = new Movie();
@@ -42,8 +48,33 @@ public class MovieServiceTest {
 		when(movieRepository.findAll()).thenReturn(fakesMovies);
 
 		List<Movie> list = movieService.findAll(); 
-		LOGGER.info("Amount of Movies: {}", list.size());
+		LOGGER.info("Test Stub Amount of Movies: {}", list.size());
 		assertThat(list).containsAnyOf(fakeMovie);
+	}
+
+	@Test
+	public void testMock() throws Exception {
+
+		Movie fakeMovie = new Movie();
+		fakeMovie.setName("Inception");
+
+		movieService.save(fakeMovie);
+
+		verify(movieRepository).save(fakeMovie);
+	}
+
+	@Test
+	public void testSpy() throws Exception {
+
+		Movie fakeMovie = new Movie();
+		fakeMovie.setName("Inception");
+
+		movieService.save(fakeMovie);
+
+		verify(movieRepository).save(fakeMovie);
+
+		verify(auditoriaService).registerLog(LoggerFactory.getLogger(MovieService.class), fakeMovie);
+		
 	}
 
 }

@@ -18,9 +18,18 @@ public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
 
+	@Autowired
+	private AuditoriaService auditoriaService;
+
     public List<Movie> findAll() {
         LOGGER.debug("Looking for all Movies");
         return movieRepository.findAll();
     }
+
+	public void save(Movie movie) {
+		LOGGER.debug("Saving Movie");
+		auditoriaService.registerLog(LOGGER, movie);
+		movieRepository.save(movie);
+	}
 
 }
