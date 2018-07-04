@@ -26,10 +26,12 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-	public void save(Movie movie) {
+	public void save(boolean movie) {
 		LOGGER.debug("Saving Movie");
+		if (movie) {
+			movieRepository.save(null);
+		}
 		auditoriaService.registerLog(LOGGER, movie);
-		movieRepository.save(movie);
 	}
 
 }

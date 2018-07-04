@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +42,11 @@ public class MovieControllerTest {
 	@MockBean
 	private MovieRepository movieRepository;
 
-//	 @Test
+	@Test
 	public void findAll() throws Exception {
 
 		Movie fakeMovie = new Movie();
-		fakeMovie.setName("jhoeller");
+		fakeMovie.setName("Wonder Woman");
 
 		List<Movie> fakesMovies = Arrays.asList(fakeMovie);
 
@@ -56,18 +57,5 @@ public class MovieControllerTest {
 		mockMvc.perform(get("/api/v1/private/movie").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].name", is(fakeMovie.getName())));
 	}
-	 
-	// @Test(expected=Exception.class)
-	// public void testInvalidTrade() throws Exception {
-	//
-	// Trade trade = new FixtureHelper().getTrade();
-	// TradeRepository tradeRepository = mock(TradeRepository.class);
-	//
-	// when(tradeRepository.getTradeById(anyLong()))
-	// .thenThrow(new TradeNotFoundException());
-	//
-	// TradingService tradingService = new SimpleTradingService(tradeRepository);
-	// tradingService.getTradeById(trade.getId());
-	// }
 
 }
